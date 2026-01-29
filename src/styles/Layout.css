@@ -1,0 +1,24 @@
+.layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding-top: 80px;
+    /* Header height + spacing */
+    padding-bottom: 80px;
+    /* Mobile nav height + spacing */
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+    .main-content {
+        padding-bottom: var(--spacing-xl);
+    }
+}

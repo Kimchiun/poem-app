@@ -1,0 +1,33 @@
+:root {
+  /* Colors - Premium Emotional Palette */
+  /* Deep Midnight Blue */
+  --color-bg: #0a0a0f;
+  /* Soft Moonlight */
+  --color-text: #e0e0e0;
+  /* Muted Lavender */
+  --color-accent: #b3b3ff;
+  /* Deep Purple/Blue Gradient Start */
+  --color-primary: #4c4cff;
+  /* Soft Pink Gradient End */
+  --color-secondary: #ff4c99;
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 10px;
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+
+  /* Typography */
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', sans-serif;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.4s ease;
+}

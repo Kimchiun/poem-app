@@ -1,0 +1,19 @@
+.footer {
+    text-align: center;
+    padding: var(--spacing-lg) 0;
+    margin-top: auto;
+    border-top: 1px solid var(--glass-border);
+    background: rgba(10, 10, 15, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.footer-text {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+}
+
+.footer-name {
+    color: var(--color-accent);
+    font-weight: 600;
+    font-family: var(--font-serif);
+}
