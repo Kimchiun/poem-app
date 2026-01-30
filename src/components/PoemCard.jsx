@@ -1,9 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Share2, MessageCircle, Trash2 } from 'lucide-react';
+import { shareContent } from '../utils/share';
 import '../styles/PoemCard.css';
 
 const PoemCard = ({ poem, onDelete }) => {
+    const handleShare = async (e) => {
+        e.preventDefault();
+        e.stopPropagation(); // Prevent card click
+
+        const shareUrl = `${window.location.origin}/poem/${poem.id}`;
+        const result = await shareContent(poem.title, `Read "${poem.title}" by ${poem.author}`, shareUrl);
+
+        if (result.success && result.method === 'clipboard') {
+            alert('링크가 복사되었습니다!');
+        }
+    };
+
     return (
         <Link to={`/poem/${poem.id}`} className="poem-card animate-fade-in">
             <div className="poem-image-container">
@@ -34,7 +47,7 @@ const PoemCard = ({ poem, onDelete }) => {
                         <MessageCircle size={20} />
                         <span>{poem.comments}</span>
                     </button>
-                    <button className="action-btn ml-auto" onClick={(e) => e.preventDefault()}>
+                    <button className="action-btn ml-auto" onClick={handleShare}>
                         <Share2 size={20} />
                     </button>
                     <button className="action-btn delete-btn" onClick={(e) => {

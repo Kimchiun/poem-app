@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MessageCircle, Share2, Trash2 } from 'lucide-react';
 import PasswordModal from '../components/PasswordModal';
 import { getPoemById, deletePoem } from '../data/poems';
+import { shareContent } from '../utils/share';
 import '../styles/PoemDetail.css';
 
 const PoemDetail = () => {
@@ -31,6 +32,15 @@ const PoemDetail = () => {
             navigate('/');
         } else {
             onError();
+        }
+    };
+
+    const handleShare = async () => {
+        const shareUrl = window.location.href;
+        const result = await shareContent(poem.title, `Read "${poem.title}" by ${poem.author}`, shareUrl);
+
+        if (result.success && result.method === 'clipboard') {
+            alert('링크가 복사되었습니다!');
         }
     };
 
@@ -86,7 +96,7 @@ const PoemDetail = () => {
                             <MessageCircle size={24} />
                             <span>{poem.comments}</span>
                         </button>
-                        <button className="action-btn large ml-auto">
+                        <button className="action-btn large ml-auto" onClick={handleShare}>
                             <Share2 size={24} />
                         </button>
                         {isOwner && (
