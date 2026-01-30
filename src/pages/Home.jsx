@@ -39,11 +39,6 @@ const Home = () => {
         <div className="home-page">
             <div className="feed-header">
                 <h1>Discover</h1>
-                <div className="filter-tabs">
-                    <button className="tab active">Trending</button>
-                    <button className="tab">Latest</button>
-                    <button className="tab">Following</button>
-                </div>
             </div>
 
             <div className="feed-container">

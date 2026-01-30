@@ -22,10 +22,6 @@ const Header = () => {
                         <PenTool size={20} />
                         <span>Write</span>
                     </Link>
-                    <Link to="/profile" className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`}>
-                        <User size={20} />
-                        <span>Profile</span>
-                    </Link>
                 </nav>
             </div>
         </header>

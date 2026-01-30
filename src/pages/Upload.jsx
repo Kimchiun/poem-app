@@ -7,6 +7,7 @@ import '../styles/Upload.css';
 const Upload = () => {
     const navigate = useNavigate();
     const [title, setTitle] = useState('');
+    const [author, setAuthor] = useState('');
     const [text, setText] = useState('');
     const [password, setPassword] = useState('');
     const [image, setImage] = useState(null);
@@ -28,8 +29,8 @@ const Upload = () => {
     };
 
     const handleSubmit = async () => {
-        if (!title || !text || !image || !password) {
-            alert('모든 필드를 입력하고 이미지를 추가해주세요 (비밀번호 포함).');
+        if (!title || !text || !image || !password || !author) {
+            alert('모든 필드를 입력하고 이미지를 추가해주세요 (작성자명, 비밀번호 포함).');
             return;
         }
 
@@ -40,7 +41,7 @@ const Upload = () => {
                 text,
                 password,
                 image, // Base64 string for now, could be uploaded to Storage later
-                author: "chiun" // Or dynamic user
+                author: author
             };
 
             await addPoem(newPoem);
@@ -82,6 +83,17 @@ const Upload = () => {
                         className="input-title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <input
+                        type="text"
+                        placeholder="Writer Name (Nickname)"
+                        className="input-title"
+                        style={{ fontSize: '1.1rem', marginTop: '0.5rem' }}
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
                     />
                 </div>
 

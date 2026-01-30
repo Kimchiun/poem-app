@@ -19,10 +19,6 @@ const MobileNav = () => {
                     </div>
                 </div>
             </Link>
-            <Link to="/profile" className={`mobile-nav-item ${location.pathname === '/profile' ? 'active' : ''}`}>
-                <User size={24} />
-                <span className="mobile-nav-label">Profile</span>
-            </Link>
         </nav>
     );
 };
