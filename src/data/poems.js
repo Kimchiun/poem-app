@@ -79,3 +79,37 @@ export const deletePoem = async (id) => {
 
     return true;
 };
+
+export const toggleLike = async (id, isLiking) => {
+    // 1. Get current likes
+    const { data: poem, error: fetchError } = await supabase
+        .from('poems')
+        .select('likes')
+        .eq('id', id)
+        .single();
+
+    if (fetchError) {
+        console.error('Error fetching poem for like:', fetchError);
+        throw fetchError;
+    }
+
+    // 2. Calculate new likes
+    // Ensure we don't go below 0
+    const currentLikes = poem.likes || 0;
+    const newLikes = isLiking ? currentLikes + 1 : Math.max(currentLikes - 1, 0);
+
+    // 3. Update
+    const { data, error } = await supabase
+        .from('poems')
+        .update({ likes: newLikes })
+        .eq('id', id)
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error toggling like:', error);
+        throw error;
+    }
+
+    return data.likes;
+};

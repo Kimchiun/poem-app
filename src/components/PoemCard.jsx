@@ -5,6 +5,47 @@ import { shareContent } from '../utils/share';
 import '../styles/PoemCard.css';
 
 const PoemCard = ({ poem, onDelete }) => {
+    const [likes, setLikes] = React.useState(poem.likes);
+    const [isLiked, setIsLiked] = React.useState(false);
+
+    React.useEffect(() => {
+        const likedPoems = JSON.parse(localStorage.getItem('liked_poems') || '[]');
+        if (likedPoems.includes(poem.id)) {
+            setIsLiked(true);
+        }
+        setLikes(poem.likes); // Sync with prop updates
+    }, [poem.id, poem.likes]);
+
+    const handleLike = async (e) => {
+        e.preventDefault(); // Prevent link navigation
+        e.stopPropagation();
+
+        const newIsLiked = !isLiked;
+        const newLikes = newIsLiked ? likes + 1 : Math.max(0, likes - 1);
+
+        // Optimistic UI update
+        setIsLiked(newIsLiked);
+        setLikes(newLikes);
+
+        // Update LocalStorage
+        const likedPoems = JSON.parse(localStorage.getItem('liked_poems') || '[]');
+        let updatedLikedPoems;
+        if (newIsLiked) {
+            updatedLikedPoems = [...likedPoems, poem.id];
+        } else {
+            updatedLikedPoems = likedPoems.filter(id => id !== poem.id);
+        }
+        localStorage.setItem('liked_poems', JSON.stringify(updatedLikedPoems));
+
+        // API Call (Fire and forget, or handle error)
+        try {
+            await import('../data/poems').then(mod => mod.toggleLike(poem.id, newIsLiked));
+        } catch (error) {
+            console.error('Failed to update like', error);
+            // Revert on error (optional, keeping it simple for now)
+        }
+    };
+
     const handleShare = async (e) => {
         e.preventDefault();
         e.stopPropagation(); // Prevent card click
@@ -39,9 +80,12 @@ const PoemCard = ({ poem, onDelete }) => {
                 </div>
 
                 <div className="poem-footer">
-                    <button className="action-btn" onClick={(e) => e.preventDefault()}>
-                        <Heart size={20} />
-                        <span>{poem.likes}</span>
+                    <button
+                        className={`action-btn ${isLiked ? 'liked' : ''}`}
+                        onClick={handleLike}
+                    >
+                        <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
+                        <span>{likes}</span>
                     </button>
                     <button className="action-btn" onClick={(e) => e.preventDefault()}>
                         <MessageCircle size={20} />
