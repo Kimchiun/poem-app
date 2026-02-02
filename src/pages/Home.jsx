@@ -102,15 +102,17 @@ const Home = () => {
 
                 {/* Sentinel element for Infinite Scroll */}
                 <div ref={observerTarget} className="loading-sentinel">
-                    {loading && (
-                        <div className="loading-container-inline">
-                            <div className="star-inline">✨</div>
-                            <p className="loading-text-inline">별들을 더 모으고 있어요...</p>
-                        </div>
-                    )}
                     {!hasMore && poems.length > 0 && <div className="feed-end">모든 별을 다 보았습니다. 🌌</div>}
                 </div>
             </div>
+
+            {/* Global Full-screen Loader */}
+            {loading && (
+                <div className="loading-container">
+                    <div className="star">✨</div>
+                    <p className="loading-text">별들을 모으는 중...</p>
+                </div>
+            )}
 
             <PasswordModal
                 isOpen={isDeleteModalOpen}
