@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, MessageCircle, Share2, Trash2 } from 'lucide-react';
 import PasswordModal from '../components/PasswordModal';
+import CommentSection from '../components/CommentSection';
 import { getPoemById, deletePoem } from '../data/poems';
 import { shareContent } from '../utils/share';
 import '../styles/PoemDetail.css';
@@ -108,13 +109,15 @@ const PoemDetail = () => {
                 </div>
             </div>
 
+            <CommentSection poemId={id} />
+
             <PasswordModal
                 isOpen={isDeleteModalOpen}
                 onClose={() => setIsDeleteModalOpen(false)}
                 onConfirm={handleConfirmDelete}
                 poemTitle={poem.title}
             />
-        </div>
+        </div >
     );
 };
 
