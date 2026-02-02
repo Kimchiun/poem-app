@@ -14,6 +14,44 @@ const PoemDetail = () => {
     const [loading, setLoading] = useState(true);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+    const [likes, setLikes] = useState(0);
+    const [isLiked, setIsLiked] = useState(false);
+
+    useEffect(() => {
+        if (!poem) return;
+
+        const likedPoems = JSON.parse(localStorage.getItem('liked_poems') || '[]');
+        if (likedPoems.includes(poem.id)) {
+            setIsLiked(true);
+        }
+        setLikes(poem.likes || 0);
+    }, [poem]);
+
+    const handleLike = async () => {
+        if (!poem) return;
+
+        const newIsLiked = !isLiked;
+        const newLikes = newIsLiked ? likes + 1 : Math.max(0, likes - 1);
+
+        setIsLiked(newIsLiked);
+        setLikes(newLikes);
+
+        const likedPoems = JSON.parse(localStorage.getItem('liked_poems') || '[]');
+        let updatedLikedPoems;
+        if (newIsLiked) {
+            updatedLikedPoems = [...likedPoems, poem.id];
+        } else {
+            updatedLikedPoems = likedPoems.filter(id => id !== poem.id);
+        }
+        localStorage.setItem('liked_poems', JSON.stringify(updatedLikedPoems));
+
+        try {
+            await import('../data/poems').then(mod => mod.toggleLike(poem.id, newIsLiked));
+        } catch (error) {
+            console.error('Failed to update like', error);
+        }
+    };
+
     useEffect(() => {
         const fetchPoem = async () => {
             const foundPoem = await getPoemById(id);
@@ -60,39 +98,7 @@ const PoemDetail = () => {
 
     const isOwner = poem.author === 'chiun';
 
-    const [likes, setLikes] = useState(poem.likes || 0);
-    const [isLiked, setIsLiked] = useState(false);
 
-    useEffect(() => {
-        const likedPoems = JSON.parse(localStorage.getItem('liked_poems') || '[]');
-        if (likedPoems.includes(poem.id)) {
-            setIsLiked(true);
-        }
-        setLikes(poem.likes);
-    }, [poem.id, poem.likes]);
-
-    const handleLike = async () => {
-        const newIsLiked = !isLiked;
-        const newLikes = newIsLiked ? likes + 1 : Math.max(0, likes - 1);
-
-        setIsLiked(newIsLiked);
-        setLikes(newLikes);
-
-        const likedPoems = JSON.parse(localStorage.getItem('liked_poems') || '[]');
-        let updatedLikedPoems;
-        if (newIsLiked) {
-            updatedLikedPoems = [...likedPoems, poem.id];
-        } else {
-            updatedLikedPoems = likedPoems.filter(id => id !== poem.id);
-        }
-        localStorage.setItem('liked_poems', JSON.stringify(updatedLikedPoems));
-
-        try {
-            await import('../data/poems').then(mod => mod.toggleLike(poem.id, newIsLiked));
-        } catch (error) {
-            console.error('Failed to update like', error);
-        }
-    };
 
     return (
         <div className="poem-detail-page animate-fade-in">
