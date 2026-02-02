@@ -13,10 +13,9 @@ const MobileNav = () => {
                 <span className="mobile-nav-label">Home</span>
             </Link>
 
-            <Link to="/upload" className="mobile-fab-wrapper">
-                <div className={`fab-button ${location.pathname === '/upload' ? 'active' : ''}`}>
-                    <PenTool size={24} />
-                </div>
+            <Link to="/upload" className={`mobile-nav-item ${location.pathname === '/upload' ? 'active' : ''}`}>
+                <PenTool size={24} />
+                <span className="mobile-nav-label">Write</span>
             </Link>
 
             <Link to="/likes" className={`mobile-nav-item ${location.pathname === '/likes' ? 'active' : ''}`}>
