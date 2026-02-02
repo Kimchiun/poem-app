@@ -17,6 +17,78 @@
     -webkit-text-fill-color: transparent;
 }
 
+/* Feed Loading & End State */
+.loading-sentinel {
+    width: 100%;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+}
+
+.loading-container-inline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.star-inline {
+    font-size: 2rem;
+    color: var(--accent-light);
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.6));
+    animation: twinkle 2s infinite ease-in-out;
+}
+
+.loading-text-inline {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 300;
+    letter-spacing: 2px;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.feed-end {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+    padding: 1rem;
+}
+
+@keyframes twinkle {
+    0% {
+        opacity: 0.4;
+        transform: scale(0.8) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(180deg);
+        filter: drop-shadow(0 0 20px rgba(139, 92, 246, 1));
+    }
+
+    100% {
+        opacity: 0.4;
+        transform: scale(0.8) rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
 .filter-tabs {
     display: flex;
     justify-content: center;
