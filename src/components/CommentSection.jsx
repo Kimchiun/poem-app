@@ -29,7 +29,7 @@ const CommentSection = ({ poemId }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!newComment.author_name || !newComment.password || !newComment.content) {
-            alert('Please fill in all fields (Name, Password, Comment).');
+            alert('닉네임, 비밀번호, 내용을 모두 입력해주세요.');
             return;
         }
 
@@ -40,7 +40,7 @@ const CommentSection = ({ poemId }) => {
             fetchComments(); // Refresh list
         } catch (error) {
             console.error(error);
-            alert('Error adding comment.');
+            alert('댓글 등록 중 오류가 발생했습니다.');
         } finally {
             setSubmitting(false);
         }
@@ -60,7 +60,7 @@ const CommentSection = ({ poemId }) => {
             setDeletePassword('');
             fetchComments();
         } catch (error) {
-            alert(error.message || 'Error deleting comment.');
+            alert(error.message || '댓글 삭제 중 오류가 발생했습니다.');
         }
     };
 
@@ -73,7 +73,7 @@ const CommentSection = ({ poemId }) => {
         <div className="comment-section">
             <h3 className="comment-header">
                 <MessageCircle size={20} />
-                Comments ({comments.length})
+                댓글 ({comments.length})
             </h3>
 
             {/* Comment Form */}
@@ -82,7 +82,7 @@ const CommentSection = ({ poemId }) => {
                     <input
                         type="text"
                         name="author_name"
-                        placeholder="Name"
+                        placeholder="닉네임"
                         value={newComment.author_name}
                         onChange={handleInputChange}
                         className="comment-input small"
@@ -90,7 +90,7 @@ const CommentSection = ({ poemId }) => {
                     <input
                         type="password"
                         name="password"
-                        placeholder="Password"
+                        placeholder="비밀번호"
                         value={newComment.password}
                         onChange={handleInputChange}
                         className="comment-input small"
@@ -98,22 +98,22 @@ const CommentSection = ({ poemId }) => {
                 </div>
                 <textarea
                     name="content"
-                    placeholder="Write a warm comment..."
+                    placeholder="따뜻한 감상을 남겨주세요..."
                     value={newComment.content}
                     onChange={handleInputChange}
                     className="comment-textarea"
                 />
                 <button type="submit" className="comment-submit-btn" disabled={submitting}>
-                    {submitting ? 'Posting...' : 'Post Comment'}
+                    {submitting ? '등록 중...' : '남기기'}
                 </button>
             </form>
 
             {/* Comment List */}
             <div className="comment-list">
                 {loading ? (
-                    <p className="loading-text">Loading thoughts...</p>
+                    <p className="loading-text">댓글을 불러오는 중...</p>
                 ) : comments.length === 0 ? (
-                    <p className="empty-text">No comments yet. Be the first to share your mind.</p>
+                    <p className="empty-text">아직 남겨진 글이 없습니다. 가장 먼저 마음을 전해보세요.</p>
                 ) : (
                     comments.map(comment => (
                         <div key={comment.id} className="comment-item">
@@ -135,14 +135,14 @@ const CommentSection = ({ poemId }) => {
                                 <div className="comment-delete-confirm">
                                     <input
                                         type="password"
-                                        placeholder="Enter PW"
+                                        placeholder="비밀번호"
                                         value={deletePassword}
                                         onChange={(e) => setDeletePassword(e.target.value)}
                                         className="delete-pw-input"
                                         autoFocus
                                     />
-                                    <button onClick={handleDeleteConfirm} className="confirm-btn">Confirm</button>
-                                    <button onClick={() => setDeleteId(null)} className="cancel-btn">Cancel</button>
+                                    <button onClick={handleDeleteConfirm} className="confirm-btn">확인</button>
+                                    <button onClick={() => setDeleteId(null)} className="cancel-btn">취소</button>
                                 </div>
                             )}
                         </div>
