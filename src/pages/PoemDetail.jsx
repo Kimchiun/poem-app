@@ -60,6 +60,40 @@ const PoemDetail = () => {
 
     const isOwner = poem.author === 'chiun';
 
+    const [likes, setLikes] = useState(poem.likes || 0);
+    const [isLiked, setIsLiked] = useState(false);
+
+    useEffect(() => {
+        const likedPoems = JSON.parse(localStorage.getItem('liked_poems') || '[]');
+        if (likedPoems.includes(poem.id)) {
+            setIsLiked(true);
+        }
+        setLikes(poem.likes);
+    }, [poem.id, poem.likes]);
+
+    const handleLike = async () => {
+        const newIsLiked = !isLiked;
+        const newLikes = newIsLiked ? likes + 1 : Math.max(0, likes - 1);
+
+        setIsLiked(newIsLiked);
+        setLikes(newLikes);
+
+        const likedPoems = JSON.parse(localStorage.getItem('liked_poems') || '[]');
+        let updatedLikedPoems;
+        if (newIsLiked) {
+            updatedLikedPoems = [...likedPoems, poem.id];
+        } else {
+            updatedLikedPoems = likedPoems.filter(id => id !== poem.id);
+        }
+        localStorage.setItem('liked_poems', JSON.stringify(updatedLikedPoems));
+
+        try {
+            await import('../data/poems').then(mod => mod.toggleLike(poem.id, newIsLiked));
+        } catch (error) {
+            console.error('Failed to update like', error);
+        }
+    };
+
     return (
         <div className="poem-detail-page animate-fade-in">
             <Link to="/" className="back-button">
@@ -89,9 +123,12 @@ const PoemDetail = () => {
                     </div>
 
                     <div className="detail-actions">
-                        <button className="action-btn large">
-                            <Heart size={24} />
-                            <span>{poem.likes}</span>
+                        <button
+                            className={`action-btn large ${isLiked ? 'liked' : ''}`}
+                            onClick={handleLike}
+                        >
+                            <Heart size={24} fill={isLiked ? "currentColor" : "none"} />
+                            <span>{likes}</span>
                         </button>
                         <button className="action-btn large">
                             <MessageCircle size={24} />
