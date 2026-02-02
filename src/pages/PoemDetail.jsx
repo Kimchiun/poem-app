@@ -84,7 +84,12 @@ const PoemDetail = () => {
     };
 
     if (loading) {
-        return <div className="poem-loading">로딩 중...</div>;
+        return (
+            <div className="loading-container">
+                <div className="star">✨</div>
+                <p className="loading-text">별들을 모으는 중...</p>
+            </div>
+        );
     }
 
     if (!poem) {
