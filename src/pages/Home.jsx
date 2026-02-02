@@ -6,16 +6,66 @@ import '../styles/Home.css';
 
 const Home = () => {
     const [poems, setPoems] = useState([]);
+    const [page, setPage] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const observerTarget = React.useRef(null);
+
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedPoem, setSelectedPoem] = useState(null);
 
+    const fetchPoems = async (pageNum) => {
+        if (loading) return;
+        setLoading(true);
+        try {
+            const newPoems = await getPoems(pageNum, 5);
+            if (newPoems.length === 0) {
+                setHasMore(false);
+            } else {
+                setPoems(prev => {
+                    // Prevent duplicates just in case
+                    const existingIds = new Set(prev.map(p => p.id));
+                    const uniqueNewPoems = newPoems.filter(p => !existingIds.has(p.id));
+                    return [...prev, ...uniqueNewPoems];
+                });
+            }
+        } catch (error) {
+            console.error("Failed to fetch poems", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Initial load
     useEffect(() => {
-        const fetchPoems = async () => {
-            const data = await getPoems();
-            setPoems(data);
-        };
-        fetchPoems();
+        fetchPoems(0);
     }, []);
+
+    // Infinite Scroll Observer
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            entries => {
+                if (entries[0].isIntersecting && hasMore && !loading) {
+                    setPage(prevPage => {
+                        const nextPage = prevPage + 1;
+                        fetchPoems(nextPage);
+                        return nextPage;
+                    });
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        if (observerTarget.current) {
+            observer.observe(observerTarget.current);
+        }
+
+        return () => {
+            if (observerTarget.current) {
+                observer.unobserve(observerTarget.current);
+            }
+        };
+    }, [hasMore, loading]);
 
     const handleDeleteClick = (poem) => {
         setSelectedPoem(poem);
@@ -26,8 +76,12 @@ const Home = () => {
         if (password === selectedPoem.password) {
             await deletePoem(selectedPoem.id);
             // Refresh list
-            const data = await getPoems();
-            setPoems(data);
+            // Refresh list - Reset to first page
+            setPage(0);
+            setPoems([]);
+            setHasMore(true);
+            fetchPoems(0);
+
             setIsDeleteModalOpen(false);
             setSelectedPoem(null);
         } else {
@@ -45,6 +99,12 @@ const Home = () => {
                 {poems.map(poem => (
                     <PoemCard key={poem.id} poem={poem} onDelete={handleDeleteClick} />
                 ))}
+
+                {/* Sentinel element for Infinite Scroll */}
+                <div ref={observerTarget} className="loading-sentinel">
+                    {loading && <div className="feed-loading">✨ 별들을 더 모으고 있어요...</div>}
+                    {!hasMore && poems.length > 0 && <div className="feed-end">모든 별을 다 보았습니다. 🌌</div>}
+                </div>
             </div>
 
             <PasswordModal

@@ -14,11 +14,15 @@ const formatDate = (isoString) => {
     return date.toLocaleDateString();
 };
 
-export const getPoems = async () => {
+export const getPoems = async (page = 0, limit = 5) => {
+    const from = page * limit;
+    const to = from + limit - 1;
+
     const { data, error } = await supabase
         .from('poems')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(from, to);
 
     if (error) {
         console.error('Error fetching poems:', error);
