@@ -117,3 +117,23 @@ export const toggleLike = async (id, isLiking) => {
 
     return data.likes;
 };
+
+export const getPoemsByIds = async (ids) => {
+    if (!ids || ids.length === 0) return [];
+
+    const { data, error } = await supabase
+        .from('poems')
+        .select('*')
+        .in('id', ids)
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching liked poems:', error);
+        return [];
+    }
+
+    return data.map(poem => ({
+        ...poem,
+        date: formatDate(poem.created_at)
+    }));
+};

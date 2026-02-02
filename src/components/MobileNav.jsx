@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { PenTool, Home, User } from 'lucide-react';
+import { PenTool, Home, Heart } from 'lucide-react';
 import '../styles/MobileNav.css';
 
 const MobileNav = () => {
@@ -12,12 +12,16 @@ const MobileNav = () => {
                 <Home size={24} />
                 <span className="mobile-nav-label">Home</span>
             </Link>
-            <Link to="/upload" className={`mobile-nav-item ${location.pathname === '/upload' ? 'active' : ''}`}>
-                <div className="fab-container">
-                    <div className="fab">
-                        <PenTool size={24} />
-                    </div>
+
+            <Link to="/upload" className="mobile-fab-wrapper">
+                <div className={`fab-button ${location.pathname === '/upload' ? 'active' : ''}`}>
+                    <PenTool size={24} />
                 </div>
+            </Link>
+
+            <Link to="/likes" className={`mobile-nav-item ${location.pathname === '/likes' ? 'active' : ''}`}>
+                <Heart size={24} />
+                <span className="mobile-nav-label">Likes</span>
             </Link>
         </nav>
     );
