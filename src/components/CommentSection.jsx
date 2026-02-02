@@ -6,7 +6,7 @@ import '../styles/CommentSection.css';
 const CommentSection = ({ poemId }) => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [newComment, setNewComment] = useState({ author_name: '', password: '', text: '' });
+    const [newComment, setNewComment] = useState({ author_name: '', password: '', content: '' });
     const [submitting, setSubmitting] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [deletePassword, setDeletePassword] = useState('');
@@ -28,7 +28,7 @@ const CommentSection = ({ poemId }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!newComment.author_name || !newComment.password || !newComment.text) {
+        if (!newComment.author_name || !newComment.password || !newComment.content) {
             alert('Please fill in all fields (Name, Password, Comment).');
             return;
         }
@@ -36,7 +36,7 @@ const CommentSection = ({ poemId }) => {
         setSubmitting(true);
         try {
             await addComment(poemId, newComment);
-            setNewComment({ author_name: '', password: '', text: '' });
+            setNewComment({ author_name: '', password: '', content: '' });
             fetchComments(); // Refresh list
         } catch (error) {
             console.error(error);
@@ -97,9 +97,9 @@ const CommentSection = ({ poemId }) => {
                     />
                 </div>
                 <textarea
-                    name="text"
+                    name="content"
                     placeholder="Write a warm comment..."
-                    value={newComment.text}
+                    value={newComment.content}
                     onChange={handleInputChange}
                     className="comment-textarea"
                 />
@@ -121,7 +121,7 @@ const CommentSection = ({ poemId }) => {
                                 <span className="comment-author">{comment.author_name}</span>
                                 <span className="comment-date">{formatDate(comment.created_at)}</span>
                             </div>
-                            <p className="comment-text">{comment.text}</p>
+                            <p className="comment-text">{comment.content}</p>
 
                             <button
                                 className="comment-delete-btn"
