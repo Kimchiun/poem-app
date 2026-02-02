@@ -23,8 +23,18 @@ const Likes = () => {
         fetchLikedPoems();
     }, []);
 
+    // Loading state
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <div className="star">✨</div>
+                <p className="loading-text">별들을 모으는 중...</p>
+            </div>
+        );
+    }
+
     // Empty state
-    if (!loading && poems.length === 0) {
+    if (poems.length === 0) {
         return (
             <div className="home-page">
                 <div className="feed-header">
@@ -34,6 +44,8 @@ const Likes = () => {
                     <Heart size={48} style={{ margin: '0 auto 1rem', display: 'block' }} />
                     <p>아직 마음에 담은 시가 없네요.</p>
                 </div>
+                {/* Add some bottom padding for the mobile nav */}
+                <div style={{ height: '80px' }}></div>
             </div>
         );
     }
