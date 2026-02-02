@@ -63,25 +63,31 @@
 }
 
 .comment-submit-btn {
-    background: var(--accent-gradient);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
+    padding: 0.8rem 1.8rem;
     border-radius: 25px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
     float: right;
+    letter-spacing: 0.5px;
 }
 
 .comment-submit-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
 
 .comment-submit-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .comment-form::after {
