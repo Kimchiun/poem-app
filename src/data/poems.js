@@ -14,7 +14,7 @@ const formatDate = (isoString) => {
     return date.toLocaleDateString();
 };
 
-export const getPoems = async (page = 0, limit = 5) => {
+export const getPoems = async (page = 0, limit = 2) => {
     const from = page * limit;
     const to = from + limit - 1;
 

@@ -18,7 +18,7 @@ const Home = () => {
         if (loading) return;
         setLoading(true);
         try {
-            const newPoems = await getPoems(pageNum, 5);
+            const newPoems = await getPoems(pageNum, 2);
             if (newPoems.length === 0) {
                 setHasMore(false);
             } else {
