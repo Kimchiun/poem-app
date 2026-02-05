@@ -28,16 +28,37 @@ const CommentSection = ({ poemId, poemPassword }) => {
     useEffect(() => {
         fetchComments();
 
-        // Load local history to identify "My Comments"
-        const savedMyComments = JSON.parse(localStorage.getItem('my_comments') || '[]');
-        setMyCommentIds(new Set(savedMyComments));
+        try {
+            // Load local history to identify "My Comments"
+            const savedMyComments = JSON.parse(localStorage.getItem('my_comments') || '[]');
+            setMyCommentIds(new Set(Array.isArray(savedMyComments) ? savedMyComments : []));
 
-        // Check if I am the owner of this poem (to see all secrets)
-        const myPoems = JSON.parse(localStorage.getItem('my_poems') || '[]'); // Assuming we store created poem IDs
-        if (myPoems.includes(Number(poemId)) || myPoems.includes(String(poemId))) {
-            setIsPoemOwner(true);
+            // Check if I am the owner of this poem (to see all secrets)
+            const myPoems = JSON.parse(localStorage.getItem('my_poems') || '[]');
+            const myPoemsArray = Array.isArray(myPoems) ? myPoems : [];
+
+            if (myPoemsArray.includes(Number(poemId)) || myPoemsArray.includes(String(poemId))) {
+                setIsPoemOwner(true);
+            }
+        } catch (e) {
+            console.error("Error parsing local storage:", e);
+            // Reset if corrupted
+            localStorage.removeItem('my_comments');
+            localStorage.removeItem('my_poems');
         }
     }, [poemId]);
+
+    const fetchComments = async () => {
+        try {
+            const data = await getComments(poemId);
+            setComments(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Failed to fetch comments:", error);
+            setComments([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleVerifyAuthor = () => {
         // Assume poemPassword is passed as prop. 
