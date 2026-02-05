@@ -157,7 +157,7 @@ const PoemDetail = () => {
                 </div>
             </div>
 
-            <CommentSection poemId={id} />
+            <CommentSection poemId={id} poemPassword={poem.password} />
 
             <PasswordModal
                 isOpen={isDeleteModalOpen}
