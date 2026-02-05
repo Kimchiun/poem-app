@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getComments, addComment, deleteComment } from '../data/comments';
-import { MessageCircle, Trash2, Lock } from 'lucide-react';
+import { MessageCircle, Trash2, Lock, Crown } from 'lucide-react';
 import '../styles/CommentSection.css';
 
 const CommentSection = ({ poemId }) => {
