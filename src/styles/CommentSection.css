@@ -61,53 +61,143 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-}
-
-.verify-modal {
-    background: rgba(20, 20, 25, 0.95);
-    border: 1px solid var(--glass-border);
-    padding: 1.5rem;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 320px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
     animation: fadeIn 0.3s ease;
 }
 
-.verify-modal h4 {
+.verify-modal {
+    background: rgba(25, 25, 35, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2.5rem 2rem;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 360px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+/* Modal Icon */
+.modal-icon {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 160, 0, 0.1));
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffd700;
     margin-bottom: 0.5rem;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.verify-modal h4 {
+    margin: 0;
+    font-size: 1.3rem;
     color: var(--text-primary);
+    font-weight: 600;
 }
 
 .verify-modal p {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-secondary);
-    margin-bottom: 1rem;
+    margin: 0;
+    line-height: 1.6;
+    opacity: 0.8;
 }
 
 .verify-input {
     width: 100%;
-    margin-bottom: 1rem;
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px;
+    color: white;
+    font-size: 1.1rem;
     text-align: center;
-    background: rgba(0, 0, 0, 0.2) !important;
+    letter-spacing: 4px;
+    /* Make dots visible */
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
 }
 
+.verify-input::placeholder {
+    font-size: 0.9rem;
+    letter-spacing: normal;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.verify-input:focus {
+    outline: none;
+    border-color: var(--accent-light);
+    background: rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+/* Modal Buttons */
 .verify-buttons {
     display: flex;
-    justify-content: center;
-    gap: 10px;
+    gap: 12px;
+    width: 100%;
+    margin-top: 0.5rem;
 }
 
-.glass-submit-btn.small {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
+.glass-btn {
+    flex: 1;
+    /* Equal width */
+    padding: 14px 0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.glass-btn.cancel {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-btn.cancel:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.glass-btn.confirm {
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+    color: white;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.glass-btn.confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+    filter: brightness(1.1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 /* Glass Postcard Form Design */

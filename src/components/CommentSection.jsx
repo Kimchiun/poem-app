@@ -74,7 +74,7 @@ const CommentSection = ({ poemId, poemPassword }) => {
                 myPoems.push(Number(poemId));
                 localStorage.setItem('my_poems', JSON.stringify(myPoems));
             }
-            alert('작가님 확인이 완료되었습니다.');
+            // alert('작가님 확인이 완료되었습니다.'); // Removed as per user request
         } else {
             alert('비밀번호가 일치하지 않습니다.');
         }
@@ -187,20 +187,24 @@ const CommentSection = ({ poemId, poemPassword }) => {
             {/* Author Verify Modal (Inline/Overlay) */}
             {isVerifyModalOpen && (
                 <div className="verify-modal-overlay">
-                    <div className="verify-modal">
-                        <h4>작가 확인</h4>
-                        <p>작품 삭제 비밀번호를 입력해주세요.</p>
+                    <div className="verify-modal glass-panel">
+                        <div className="modal-icon">
+                            <Crown size={32} />
+                        </div>
+                        <h4>작가 인증</h4>
+                        <p>작가님 본인 확인을 위해<br />설정하신 비밀번호를 입력해주세요.</p>
                         <input
                             type="password"
-                            placeholder="비밀번호"
+                            placeholder="비밀번호 입력"
                             value={verifyPassword}
                             onChange={(e) => setVerifyPassword(e.target.value)}
                             className="verify-input"
                             autoFocus
+                            onKeyDown={(e) => e.key === 'Enter' && handleVerifyAuthor()}
                         />
                         <div className="verify-buttons">
-                            <button onClick={handleVerifyAuthor} className="glass-submit-btn small">확인</button>
-                            <button onClick={() => setIsVerifyModalOpen(false)} className="cancel-btn">취소</button>
+                            <button onClick={() => setIsVerifyModalOpen(false)} className="glass-btn cancel">취소</button>
+                            <button onClick={handleVerifyAuthor} className="glass-btn confirm">인증하기</button>
                         </div>
                     </div>
                 </div>
