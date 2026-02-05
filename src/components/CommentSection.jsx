@@ -150,19 +150,18 @@ const CommentSection = ({ poemId }) => {
                     />
                 </div>
                 <div className="comment-options">
-                    <label className={`secret-checkbox ${isSecret ? 'checked' : ''}`}>
-                        <input
-                            type="checkbox"
-                            checked={isSecret}
-                            onChange={(e) => setIsSecret(e.target.checked)}
-                        />
-                        <Lock size={14} />
-                        <span>비밀글</span>
-                    </label>
+                    <button
+                        type="button"
+                        className={`secret-toggle-btn ${isSecret ? 'active' : ''}`}
+                        onClick={() => setIsSecret(!isSecret)}
+                    >
+                        <Lock size={14} className="lock-icon" />
+                        <span>비밀 이야기</span>
+                    </button>
                 </div>
                 <textarea
                     name="content"
-                    placeholder={isSecret ? "비밀 이야기를 남겨보세요..." : "따뜻한 감상을 남겨주세요..."}
+                    placeholder={isSecret ? "이 글은 작가님과 나만 볼 수 있어요. (비밀 이야기)" : "따뜻한 감상을 남겨주세요..."}
                     value={newComment.content}
                     onChange={handleInputChange}
                     className={`comment-textarea ${isSecret ? 'secret-mode' : ''}`}
