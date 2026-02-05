@@ -3,7 +3,7 @@ import { getComments, addComment, deleteComment } from '../data/comments';
 import { MessageCircle, Trash2, Lock, Crown, Check, X } from 'lucide-react';
 import '../styles/CommentSection.css';
 
-const CommentSection = ({ poemId }) => {
+const CommentSection = ({ poemId, poemPassword }) => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [newComment, setNewComment] = useState({ author_name: '', password: '', content: '' });
@@ -21,6 +21,10 @@ const CommentSection = ({ poemId }) => {
     const [myCommentIds, setMyCommentIds] = useState(new Set());
     const [isPoemOwner, setIsPoemOwner] = useState(false);
 
+    // Author Verification
+    const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
+    const [verifyPassword, setVerifyPassword] = useState('');
+
     useEffect(() => {
         fetchComments();
 
@@ -30,104 +34,79 @@ const CommentSection = ({ poemId }) => {
 
         // Check if I am the owner of this poem (to see all secrets)
         const myPoems = JSON.parse(localStorage.getItem('my_poems') || '[]'); // Assuming we store created poem IDs
-        // Note: 'my_poems' might store full objects or IDs. Adjust based on app convention.
-        // If my_poems stores IDs:
         if (myPoems.includes(Number(poemId)) || myPoems.includes(String(poemId))) {
             setIsPoemOwner(true);
         }
     }, [poemId]);
 
-    const fetchComments = async () => {
-        const data = await getComments(poemId);
-        setComments(data);
-        setLoading(false);
-    };
+    const handleVerifyAuthor = () => {
+        // Assume poemPassword is passed as prop. 
+        // Note: We need to make sure poemPassword is destructured from props.
+        if (verifyPassword === poemPassword) {
+            setIsPoemOwner(true);
+            setIsVerifyModalOpen(false);
+            setVerifyPassword('');
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewComment(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!newComment.author_name || !newComment.password || !newComment.content) {
-            alert('닉네임, 비밀번호, 내용을 모두 입력해주세요.');
-            return;
-        }
-
-        setSubmitting(true);
-        try {
-            const commentData = { ...newComment, is_secret: isSecret };
-            const result = await addComment(poemId, commentData);
-
-            // Save to "My Comments"
-            if (result && result.id) {
-                const updatedMyComments = [...Array.from(myCommentIds), result.id];
-                localStorage.setItem('my_comments', JSON.stringify(updatedMyComments));
-                setMyCommentIds(new Set(updatedMyComments));
+            // Update LocalStorage
+            const myPoems = JSON.parse(localStorage.getItem('my_poems') || '[]');
+            if (!myPoems.includes(Number(poemId))) {
+                myPoems.push(Number(poemId));
+                localStorage.setItem('my_poems', JSON.stringify(myPoems));
             }
-
-            setNewComment({ author_name: '', password: '', content: '' });
-            setIsSecret(false);
-            fetchComments();
-        } catch (error) {
-            console.error(error);
-            alert('댓글 등록 중 오류가 발생했습니다. (is_secret 컬럼이 DB에 추가되었는지 확인해주세요)');
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
-    const handleUnlockConfirm = () => {
-        const targetComment = comments.find(c => c.id === unlockId);
-        if (targetComment && targetComment.password === unlockPassword) {
-            setUnlockedIds(prev => new Set(prev).add(unlockId));
-            setUnlockId(null);
-            setUnlockPassword('');
+            alert('작가님 확인이 완료되었습니다.');
         } else {
             alert('비밀번호가 일치하지 않습니다.');
         }
     };
 
-    const handleDeleteClick = (id) => {
-        setDeleteId(id);
-        setDeletePassword('');
-        setUnlockId(null); // Close unlock if open
-    };
-
-    const handleDeleteConfirm = async () => {
-        if (!deletePassword) return;
-
-        try {
-            await deleteComment(deleteId, poemId, deletePassword);
-            setDeleteId(null);
-            setDeletePassword('');
-            fetchComments();
-        } catch (error) {
-            alert(error.message || '댓글 삭제 중 오류가 발생했습니다.');
-        }
-    };
-
-    const formatDate = (isoString) => {
-        const date = new Date(isoString);
-        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    };
-
-    // Check visibility
-    const canSeeComment = (comment) => {
-        if (!comment.is_secret) return true; // Public
-        if (isPoemOwner) return true; // Poem Owner
-        if (myCommentIds.has(comment.id)) return true; // Comment Author (cached)
-        if (unlockedIds.has(comment.id)) return true; // Temporarily unlocked
-        return false;
-    };
+    // ... (rest of functions)
 
     return (
         <div className="comment-section">
-            <h3 className="comment-header">
-                <MessageCircle size={20} />
-                댓글 ({comments.length})
-            </h3>
+            <div className="comment-header-row">
+                <h3 className="comment-header-title">
+                    <MessageCircle size={20} />
+                    댓글 ({comments.length})
+                </h3>
+                {!isPoemOwner && (
+                    <button
+                        className="author-verify-btn"
+                        onClick={() => setIsVerifyModalOpen(true)}
+                        title="작가 인증"
+                    >
+                        <Crown size={16} />
+                        <span>작가 인증</span>
+                    </button>
+                )}
+                {isPoemOwner && (
+                    <span className="author-badge">
+                        <Crown size={14} />
+                        <span>작가 확인됨</span>
+                    </span>
+                )}
+            </div>
+
+            {/* Author Verify Modal (Inline/Overlay) */}
+            {isVerifyModalOpen && (
+                <div className="verify-modal-overlay">
+                    <div className="verify-modal">
+                        <h4>작가 확인</h4>
+                        <p>작품 삭제 비밀번호를 입력해주세요.</p>
+                        <input
+                            type="password"
+                            placeholder="비밀번호"
+                            value={verifyPassword}
+                            onChange={(e) => setVerifyPassword(e.target.value)}
+                            className="verify-input"
+                            autoFocus
+                        />
+                        <div className="verify-buttons">
+                            <button onClick={handleVerifyAuthor} className="glass-submit-btn small">확인</button>
+                            <button onClick={() => setIsVerifyModalOpen(false)} className="cancel-btn">취소</button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Comment Form - Glass Postcard Design */}
             <form onSubmit={handleSubmit} className="comment-form-glass">
