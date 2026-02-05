@@ -129,46 +129,61 @@ const CommentSection = ({ poemId }) => {
                 댓글 ({comments.length})
             </h3>
 
-            {/* Comment Form */}
-            <form onSubmit={handleSubmit} className="comment-form">
-                <div className="comment-inputs">
-                    <input
-                        type="text"
-                        name="author_name"
-                        placeholder="닉네임"
-                        value={newComment.author_name}
+            {/* Comment Form - Glass Postcard Design */}
+            <form onSubmit={handleSubmit} className="comment-form-glass">
+
+                {/* 1. Header: Inputs */}
+                <div className="form-header">
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            name="author_name"
+                            placeholder="닉네임"
+                            value={newComment.author_name}
+                            onChange={handleInputChange}
+                            className="glass-input"
+                        />
+                    </div>
+                    <div className="input-group">
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="비밀번호"
+                            value={newComment.password}
+                            onChange={handleInputChange}
+                            className="glass-input"
+                        />
+                    </div>
+                </div>
+
+                {/* 2. Body: Textarea */}
+                <div className={`form-body ${isSecret ? 'secret-active' : ''}`}>
+                    <textarea
+                        name="content"
+                        placeholder={isSecret ? "달에게만 들려줄 비밀 이야기를 적어보세요..." : "이 시에 대한 따뜻한 감상을 남겨주세요."}
+                        value={newComment.content}
                         onChange={handleInputChange}
-                        className="comment-input small"
-                    />
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="비밀번호"
-                        value={newComment.password}
-                        onChange={handleInputChange}
-                        className="comment-input small"
+                        className="glass-textarea"
                     />
                 </div>
-                <div className="comment-options">
-                    <button
-                        type="button"
-                        className={`secret-toggle-btn ${isSecret ? 'active' : ''}`}
-                        onClick={() => setIsSecret(!isSecret)}
-                    >
-                        <Lock size={14} className="lock-icon" />
-                        <span>비밀 이야기</span>
+
+                {/* 3. Footer: Actions */}
+                <div className="form-footer">
+                    {/* Secret Toggle Switch */}
+                    <div className="secret-toggle-wrapper" onClick={() => setIsSecret(!isSecret)}>
+                        <div className={`toggle-switch ${isSecret ? 'on' : 'off'}`}>
+                            <div className="toggle-handle"></div>
+                        </div>
+                        <span className={`toggle-label ${isSecret ? 'active' : ''}`}>
+                            {isSecret ? '비밀 이야기 ON' : '비밀 이야기 OFF'}
+                        </span>
+                        {isSecret && <Lock size={14} className="secret-icon-indicator" />}
+                    </div>
+
+                    <button type="submit" className="glass-submit-btn" disabled={submitting}>
+                        {submitting ? '저장 중...' : '남기기'}
                     </button>
                 </div>
-                <textarea
-                    name="content"
-                    placeholder={isSecret ? "이 글은 작가님과 나만 볼 수 있어요. (비밀 이야기)" : "따뜻한 감상을 남겨주세요..."}
-                    value={newComment.content}
-                    onChange={handleInputChange}
-                    className={`comment-textarea ${isSecret ? 'secret-mode' : ''}`}
-                />
-                <button type="submit" className="comment-submit-btn" disabled={submitting}>
-                    {submitting ? '등록 중...' : '남기기'}
-                </button>
             </form>
 
             {/* Comment List */}
