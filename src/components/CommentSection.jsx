@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getComments, addComment, deleteComment } from '../data/comments';
-import { MessageCircle, Trash2, Lock, Crown, Check, X } from 'lucide-react';
+import { MessageCircle, Trash2, Lock, Crown } from 'lucide-react';
 import '../styles/CommentSection.css';
 
 const CommentSection = ({ poemId, poemPassword }) => {
@@ -200,10 +200,10 @@ const CommentSection = ({ poemId, poemPassword }) => {
                                         />
                                         <div className="inline-actions">
                                             <button onClick={handleUnlockConfirm} className="icon-btn confirm">
-                                                <Check size={18} />
+                                                <span>✓</span>
                                             </button>
                                             <button onClick={() => { setUnlockId(null); setUnlockPassword(''); }} className="icon-btn cancel">
-                                                <X size={18} />
+                                                <span>✕</span>
                                             </button>
                                         </div>
                                     </div>
@@ -239,10 +239,10 @@ const CommentSection = ({ poemId, poemPassword }) => {
                                         />
                                         <div className="inline-actions">
                                             <button onClick={handleDeleteConfirm} className="icon-btn delete">
-                                                <Check size={18} />
+                                                <span>✓</span>
                                             </button>
                                             <button onClick={() => setDeleteId(null)} className="icon-btn cancel">
-                                                <X size={18} />
+                                                <span>✕</span>
                                             </button>
                                         </div>
                                     </div>
