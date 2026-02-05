@@ -13,6 +13,10 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     overflow-x: hidden;
+    /* Font Smoothing for Windows/Mac consistency */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 h1,
@@ -43,20 +47,26 @@ img {
     display: block;
 }
 
-/* Scrollbar */
+/* Scrollbar - Sleek & Minimal for Windows */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
+    height: 6px;
+    /* For horizontal scrollbars */
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-bg);
+    background: transparent;
+    /* Seamless transparency */
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--glass-border);
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    /* Very subtle by default */
+    border-radius: 10px;
+    transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--color-accent);
+    /* Highlight on interaction */
 }
