@@ -80,7 +80,84 @@ const CommentSection = ({ poemId, poemPassword }) => {
         }
     };
 
-    // ... (rest of functions)
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewComment(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!newComment.author_name || !newComment.password || !newComment.content) {
+            alert('닉네임, 비밀번호, 내용을 모두 입력해주세요.');
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            const commentData = { ...newComment, is_secret: isSecret };
+            const result = await addComment(poemId, commentData);
+
+            // Save to "My Comments"
+            if (result && result.id) {
+                const updatedMyComments = [...Array.from(myCommentIds), result.id];
+                localStorage.setItem('my_comments', JSON.stringify(updatedMyComments));
+                setMyCommentIds(new Set(updatedMyComments));
+            }
+
+            setNewComment({ author_name: '', password: '', content: '' });
+            setIsSecret(false);
+            fetchComments();
+        } catch (error) {
+            console.error(error);
+            alert('댓글 등록 중 오류가 발생했습니다. (is_secret 컬럼이 DB에 추가되었는지 확인해주세요)');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleUnlockConfirm = () => {
+        const targetComment = comments.find(c => c.id === unlockId);
+        if (targetComment && targetComment.password === unlockPassword) {
+            setUnlockedIds(prev => new Set(prev).add(unlockId));
+            setUnlockId(null);
+            setUnlockPassword('');
+        } else {
+            alert('비밀번호가 일치하지 않습니다.');
+        }
+    };
+
+    const handleDeleteClick = (id) => {
+        setDeleteId(id);
+        setDeletePassword('');
+        setUnlockId(null); // Close unlock if open
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!deletePassword) return;
+
+        try {
+            await deleteComment(deleteId, poemId, deletePassword);
+            setDeleteId(null);
+            setDeletePassword('');
+            fetchComments();
+        } catch (error) {
+            alert(error.message || '댓글 삭제 중 오류가 발생했습니다.');
+        }
+    };
+
+    const formatDate = (isoString) => {
+        const date = new Date(isoString);
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
+
+    // Check visibility
+    const canSeeComment = (comment) => {
+        if (!comment.is_secret) return true; // Public
+        if (isPoemOwner) return true; // Poem Owner
+        if (myCommentIds.has(comment.id)) return true; // Comment Author (cached)
+        if (unlockedIds.has(comment.id)) return true; // Temporarily unlocked
+        return false;
+    };
 
     return (
         <div className="comment-section">
