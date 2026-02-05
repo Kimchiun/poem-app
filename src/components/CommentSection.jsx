@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getComments, addComment, deleteComment } from '../data/comments';
-import { MessageCircle, Trash2, Lock, Crown } from 'lucide-react';
+import { MessageCircle, Trash2, Lock, Crown, Check, X } from 'lucide-react';
 import '../styles/CommentSection.css';
 
 const CommentSection = ({ poemId }) => {
@@ -209,72 +209,58 @@ const CommentSection = ({ poemId }) => {
                                 {isVisible ? (
                                     <p className="comment-text">{comment.content}</p>
                                 ) : unlockId === comment.id ? (
-                                    <div className="comment-action-overlay">
-                                        <p>비밀글 확인</p>
+                                    <div className="secret-inline-verify">
                                         <input
                                             type="password"
-                                            placeholder="비밀번호 입력"
+                                            placeholder="비밀번호"
                                             value={unlockPassword}
                                             onChange={(e) => setUnlockPassword(e.target.value)}
-                                            className="action-pw-input"
+                                            className="inline-pw-input"
                                             autoFocus
+                                            onKeyDown={(e) => e.key === 'Enter' && handleUnlockConfirm()}
                                         />
-                                        <div className="overlay-buttons">
-                                            <button onClick={handleUnlockConfirm} className="confirm-btn">확인</button>
-                                            <button onClick={() => { setUnlockId(null); setUnlockPassword(''); }} className="cancel-btn">취소</button>
+                                        <div className="inline-actions">
+                                            <button onClick={handleUnlockConfirm} className="icon-btn confirm">
+                                                <Check size={18} />
+                                            </button>
+                                            <button onClick={() => { setUnlockId(null); setUnlockPassword(''); }} className="icon-btn cancel">
+                                                <X size={18} />
+                                            </button>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="secret-placeholder" onClick={() => setUnlockId(comment.id)}>
                                         <Lock size={16} />
-                                        <span>비밀 댓글입니다. (클릭하여 열기)</span>
+                                        <span>비밀 댓글입니다.</span>
                                     </div>
                                 )}
 
-                                {/* Actions (Delete) - Only show if visible or it's a secret placeholder (anyone can try to delete/unlock) */}
-                                <button
-                                    className="comment-delete-btn"
-                                    onClick={() => handleDeleteClick(comment.id)}
-                                >
-                                    <Trash2 size={14} />
-                                </button>
-
-                                {/* Delete Confirmation (Inline) - Only for Delete */}
-                                {deleteId === comment.id && !isVisible && unlockId !== comment.id && (
-                                    <div className="comment-action-overlay">
-                                        <p>댓글 삭제</p>
-                                        <input
-                                            type="password"
-                                            placeholder="비밀번호 입력"
-                                            value={deletePassword}
-                                            onChange={(e) => setDeletePassword(e.target.value)}
-                                            className="action-pw-input"
-                                            autoFocus
-                                        />
-                                        <div className="overlay-buttons">
-                                            <button onClick={handleDeleteConfirm} className="confirm-btn delete">삭제</button>
-                                            <button onClick={() => setDeleteId(null)} className="cancel-btn">취소</button>
-                                        </div>
-                                    </div>
+                                {/* Actions (Delete) */}
+                                {!unlockId && (
+                                    <button
+                                        className="comment-delete-btn"
+                                        onClick={() => handleDeleteClick(comment.id)}
+                                    >
+                                        <Trash2 size={14} />
+                                    </button>
                                 )}
 
                                 {/* Delete Confirmation (Inline) */}
-                                {deleteId === comment.id && (
-                                    <div className="comment-action-overlay">
-                                        <p>댓글 삭제</p>
-                                        <input
-                                            type="password"
-                                            placeholder="비밀번호 입력"
-                                            value={deletePassword}
-                                            onChange={(e) => setDeletePassword(e.target.value)}
-                                            className="action-pw-input"
-                                            autoFocus
-                                        />
-                                        <div className="overlay-buttons">
-                                            <button onClick={handleDeleteConfirm} className="confirm-btn delete">삭제</button>
-                                            <button onClick={() => setDeleteId(null)} className="cancel-btn">취소</button>
-                                        </div>
+                                <div className="comment-action-overlay">
+                                    <p>댓글 삭제</p>
+                                    <input
+                                        type="password"
+                                        placeholder="비밀번호 입력"
+                                        value={deletePassword}
+                                        onChange={(e) => setDeletePassword(e.target.value)}
+                                        className="action-pw-input"
+                                        autoFocus
+                                    />
+                                    <div className="overlay-buttons">
+                                        <button onClick={handleDeleteConfirm} className="confirm-btn delete">삭제</button>
+                                        <button onClick={() => setDeleteId(null)} className="cancel-btn">취소</button>
                                     </div>
+                                </div>
                                 )}
                             </div>
                         );
