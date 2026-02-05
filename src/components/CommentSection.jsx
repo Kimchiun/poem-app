@@ -246,21 +246,27 @@ const CommentSection = ({ poemId }) => {
                                 )}
 
                                 {/* Delete Confirmation (Inline) */}
-                                <div className="comment-action-overlay">
-                                    <p>댓글 삭제</p>
-                                    <input
-                                        type="password"
-                                        placeholder="비밀번호 입력"
-                                        value={deletePassword}
-                                        onChange={(e) => setDeletePassword(e.target.value)}
-                                        className="action-pw-input"
-                                        autoFocus
-                                    />
-                                    <div className="overlay-buttons">
-                                        <button onClick={handleDeleteConfirm} className="confirm-btn delete">삭제</button>
-                                        <button onClick={() => setDeleteId(null)} className="cancel-btn">취소</button>
+                                {deleteId === comment.id && !isVisible && unlockId !== comment.id && (
+                                    <div className="secret-inline-verify delete-mode">
+                                        <span className="inline-label">삭제:</span>
+                                        <input
+                                            type="password"
+                                            placeholder="비밀번호"
+                                            value={deletePassword}
+                                            onChange={(e) => setDeletePassword(e.target.value)}
+                                            className="inline-pw-input"
+                                            autoFocus
+                                            onKeyDown={(e) => e.key === 'Enter' && handleDeleteConfirm()}
+                                        />
+                                        <div className="inline-actions">
+                                            <button onClick={handleDeleteConfirm} className="icon-btn delete">
+                                                <Check size={18} />
+                                            </button>
+                                            <button onClick={() => setDeleteId(null)} className="icon-btn cancel">
+                                                <X size={18} />
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
                                 )}
                             </div>
                         );
