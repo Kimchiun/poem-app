@@ -208,6 +208,22 @@ const CommentSection = ({ poemId }) => {
 
                                 {isVisible ? (
                                     <p className="comment-text">{comment.content}</p>
+                                ) : unlockId === comment.id ? (
+                                    <div className="comment-action-overlay">
+                                        <p>비밀글 확인</p>
+                                        <input
+                                            type="password"
+                                            placeholder="비밀번호 입력"
+                                            value={unlockPassword}
+                                            onChange={(e) => setUnlockPassword(e.target.value)}
+                                            className="action-pw-input"
+                                            autoFocus
+                                        />
+                                        <div className="overlay-buttons">
+                                            <button onClick={handleUnlockConfirm} className="confirm-btn">확인</button>
+                                            <button onClick={() => { setUnlockId(null); setUnlockPassword(''); }} className="cancel-btn">취소</button>
+                                        </div>
+                                    </div>
                                 ) : (
                                     <div className="secret-placeholder" onClick={() => setUnlockId(comment.id)}>
                                         <Lock size={16} />
@@ -223,21 +239,21 @@ const CommentSection = ({ poemId }) => {
                                     <Trash2 size={14} />
                                 </button>
 
-                                {/* Unlock Modal/Input (Inline) */}
-                                {unlockId === comment.id && !isVisible && (
+                                {/* Delete Confirmation (Inline) - Only for Delete */}
+                                {deleteId === comment.id && !isVisible && unlockId !== comment.id && (
                                     <div className="comment-action-overlay">
-                                        <p>비밀글 확인</p>
+                                        <p>댓글 삭제</p>
                                         <input
                                             type="password"
                                             placeholder="비밀번호 입력"
-                                            value={unlockPassword}
-                                            onChange={(e) => setUnlockPassword(e.target.value)}
+                                            value={deletePassword}
+                                            onChange={(e) => setDeletePassword(e.target.value)}
                                             className="action-pw-input"
                                             autoFocus
                                         />
                                         <div className="overlay-buttons">
-                                            <button onClick={handleUnlockConfirm} className="confirm-btn">확인</button>
-                                            <button onClick={() => { setUnlockId(null); setUnlockPassword(''); }} className="cancel-btn">취소</button>
+                                            <button onClick={handleDeleteConfirm} className="confirm-btn delete">삭제</button>
+                                            <button onClick={() => setDeleteId(null)} className="cancel-btn">취소</button>
                                         </div>
                                     </div>
                                 )}
